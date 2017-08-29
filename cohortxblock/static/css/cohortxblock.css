@@ -1,0 +1,9 @@
+/* CSS for CohortXBlock */
+
+.cohortxblock_block .count {
+    font-weight: bold;
+}
+
+.cohortxblock_block p {
+    cursor: pointer;
+}

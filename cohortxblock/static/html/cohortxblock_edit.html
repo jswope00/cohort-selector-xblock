@@ -1,0 +1,47 @@
+<div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
+  <ul class="list-input settings-list">
+
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="general_title">General Title</label>
+        <input class="input setting-input" name="general_title" id="general_title" type="text" value="{{self.general_title}}" />
+      </div>
+      <span class="tip setting-help">The title of the component</span>
+    </li>
+
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="instructions">Instructions</label>
+        <input class="input setting-input" name="instructions" id="instructions" type="text" value="{{self.instructions}}" />
+      </div>
+      <span class="tip setting-help">Paragraph text to show to students</span>
+    </li>
+
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="cohort_list" style="vertical-align: top;padding-top: 45px;">Cohort Name(s)</label>
+         <select multiple="multiple" name="cohort_list" id="cohort_list">
+          {% for cohort in self.cohort_list %}
+              {% if cohort.name in self.cohort_display %}
+                <option value="{{cohort.name}}" selected>{{cohort.name}}</option>
+              {% else %}
+                <option value="{{cohort.name}}">{{cohort.name}}</option>
+              {% endif %}
+          {% endfor %}
+         </select>
+      </div>
+      <span class="tip setting-help">A list of cohorts that will be displayed to students.</span>
+    </li>
+
+  </ul>
+  <div class="xblock-actions">
+    <ul>
+      <li class="action-item">
+        <a href="#" class="button action-primary save-button">Save</a>
+      </li>
+      <li class="action-item">
+        <a href="#" class="button cancel-button">Cancel</a>
+      </li>
+    </ul>
+  </div>
+</div>

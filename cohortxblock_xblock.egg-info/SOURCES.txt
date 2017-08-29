@@ -1,0 +1,12 @@
+cohortxblock/__init__.py
+cohortxblock/cohortxblock.py
+cohortxblock/static/README.txt
+cohortxblock/static/css/cohortxblock.css
+cohortxblock/static/html/cohortxblock.html
+cohortxblock/static/js/src/cohortxblock.js
+cohortxblock_xblock.egg-info/PKG-INFO
+cohortxblock_xblock.egg-info/SOURCES.txt
+cohortxblock_xblock.egg-info/dependency_links.txt
+cohortxblock_xblock.egg-info/entry_points.txt
+cohortxblock_xblock.egg-info/requires.txt
+cohortxblock_xblock.egg-info/top_level.txt

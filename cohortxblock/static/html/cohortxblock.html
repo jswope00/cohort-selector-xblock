@@ -1,0 +1,17 @@
+{{self.selected_cohort_id}}
+<div class="cohortxblock_block">
+	<h1>{{self.general_title}}</h1>
+	<h3>{{self.instructions}}</h3>
+	<select name="student_cohort_list" id="student_cohort_list">
+		{% for cohort in self.cohort_display %}
+			{% if cohort == self.selected_cohort %}
+				<option value="{{cohort}}" selected>{{cohort}}</option>
+			{% else %}
+				<option value="{{cohort}}">{{cohort}}</option>
+			{% endif %}
+		{% endfor %}
+	</select>
+	<div style="padding: 10px">													
+        <button id ="btn" type="button" class="cohortxblock_block">Submit</button>    
+    </div>	
+</div>                                                                          
