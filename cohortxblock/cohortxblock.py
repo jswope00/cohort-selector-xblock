@@ -8,6 +8,7 @@ from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from courseware import courses
 from openedx.core.djangoapps.course_groups.cohorts import get_course_cohorts, is_course_cohorted, get_cohort_by_name
+from django.contrib.auth.models import User
 
 loader = ResourceLoader(__name__)
 
@@ -64,8 +65,12 @@ class CohortXBlock(XBlock):
         The primary view of the CohortXBlock, shown to students
         when viewing courses.
         """
+
+        user = User.objects.get(id=self.scope_ids.user_id)
+
         context.update({
-            "self": self
+            "self": self,
+	    "user":user
         })
         fragment = Fragment()
         fragment.add_content(loader.render_template("static/html/cohortxblock.html",context))

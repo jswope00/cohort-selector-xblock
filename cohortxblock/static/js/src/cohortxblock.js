@@ -19,9 +19,16 @@ function CohortXBlock(runtime, element) {
         var add_user_to_cohort_url = "http://54.84.102.234/courses/{{self.course_id}}/cohorts/{{self.selected_cohort_id}}/add"
         $.ajax({
         type: "POST",
-        url: handle_Url,        
-        data: JSON.stringify({users:selected_cohort}), 
-        success: location.reload()  
+        url: add_user_to_cohort_url,        
+        data: {users:"{{user}}"}, 
+        success: function (data) {
+                 console.log("Success : ");
+                 console.log(data);
+			         },
+        error: function (error) {
+                 console.log("Error");
+                  console.log(error);
+                                }  
         });   
       }    
 }
