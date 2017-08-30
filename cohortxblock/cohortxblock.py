@@ -109,11 +109,5 @@ class CohortXBlock(XBlock):
     @XBlock.json_handler                                
     def selected_value(self, data, suffix=''):
         self.selected_cohort = data.get('selection')
-        print("1========================")
-        print(self.selected_cohort)
         verified_cohort = get_cohort_by_name(self.course_id, self.selected_cohort)
-        print("2========================")
-        print(verified_cohort)
-        # self.selected_cohort_id = verified_cohort
-
-                
+        self.selected_cohort_id = str(verified_cohort.id)
