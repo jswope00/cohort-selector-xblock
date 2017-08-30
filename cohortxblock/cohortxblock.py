@@ -69,8 +69,8 @@ class CohortXBlock(XBlock):
         })
         fragment = Fragment()
         fragment.add_content(loader.render_template("static/html/cohortxblock.html",context))
+        fragment.add_javascript(loader.render_template("static/js/src/cohortxblock.js",context))
         fragment.add_css(self.resource_string("static/css/cohortxblock.css"))
-        fragment.add_javascript(self.resource_string("static/js/src/cohortxblock.js"))
         fragment.initialize_js('CohortXBlock')
         return fragment
 
@@ -111,3 +111,4 @@ class CohortXBlock(XBlock):
         self.selected_cohort = data.get('selection')
         verified_cohort = get_cohort_by_name(self.course_id, self.selected_cohort)
         self.selected_cohort_id = str(verified_cohort.id)
+        return
