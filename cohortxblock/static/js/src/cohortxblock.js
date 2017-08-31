@@ -5,6 +5,8 @@ function CohortXBlock(runtime, element) {
 
     $('#btn', element).click(function(eventObject) {
         get_cohort_id();                                                       
+	$('#notification_messages').empty();
+	$('#error_messages').empty();
       });
 
     function get_cohort_id(){
@@ -14,12 +16,20 @@ function CohortXBlock(runtime, element) {
           type: "POST",
           url: get_cohort_id_url,        
           data: JSON.stringify({selection:selected_cohort}), 
-          success: add_user_to_cohort()  
+	  success: function (data) {
+          console.log("Success : ");
+          console.log(data);
+	  add_user_to_cohort(data);
+          },
+          error: function (error) {
+            console.log("Error");
+            console.log(error);
+          }
         });       
     }
 
-    function add_user_to_cohort(){
-        var add_user_to_cohort_url = "http://54.84.102.234/courses/{{self.course_id}}/cohorts/{{self.selected_cohort_id}}/add"
+    function add_user_to_cohort(cohort_id){
+        var add_user_to_cohort_url = "http://54.84.102.234/courses/{{self.course_id}}/cohorts/"+cohort_id+"/add"
         $.ajax({
         type: "POST",
         url: add_user_to_cohort_url,        
@@ -59,19 +69,19 @@ function CohortXBlock(runtime, element) {
         message = ""
         error = ""
         if (numUsersAdded > 0) {
-          message += "\nYour preferences have been saved."
-          message += "\nYou have been added to this cohort."
+          message = "Your preferences have been saved."
+          message += "<br>You have been added to this cohort."
           save_selected_cohort();
         }
         numChanged = modifiedUsers.changed.length;
         if (numChanged > 0) {
-          message += "\nYou have been removed from "+modifiedUsers.changed.previous_cohort
+          message += "<br>You have been removed from "+modifiedUsers.changed[0].previous_cohort
         }
         numPresent = modifiedUsers.present.length;
         if (numPresent > 0){
-          message += "\nYou are already in this cohort"
+          message = "You are already in this cohort"
         }
-        numErrors = modifiedUsers.unknown.length + modifiedUsers.invalid.length;
+        numErrors = modifiedUsers.unknown.length;
         if (numErrors >0){
           error = "You could not be added to this cohort"
         }

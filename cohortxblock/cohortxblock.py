@@ -113,7 +113,7 @@ class CohortXBlock(XBlock):
     def get_cohort_id(self, data, suffix=''):
         verified_cohort = get_cohort_by_name(self.course_id, data.get('selection'))
         self.selected_cohort_id = str(verified_cohort.id)
-        return
+        return verified_cohort.id
 
     @XBlock.json_handler                                
     def save_selected_cohort(self, data, suffix=''):
