@@ -27,7 +27,7 @@ function CohortXBlock(runtime, element) {
         success: function (data) {
           console.log("Success : ");
           console.log(data);
-          save_selected_cohort();
+          generate_message(data);
         },
         error: function (error) {
           console.log("Error");
@@ -45,13 +45,38 @@ function CohortXBlock(runtime, element) {
           success: function (data) {
             console.log("Success : ");
             console.log(data);
-            location.reload();
           },
           error: function (error) {
             console.log("Error");
             console.log(error);
           }  
         });
+    }
+
+    function generate_message(modifiedUsers){
+        var numUsersAdded, numPresent, message
+        numUsersAdded = modifiedUsers.added.length + modifiedUsers.changed.length;
+        message = ""
+        error = ""
+        if (numUsersAdded > 0) {
+          message += "\nYour preferences have been saved."
+          message += "\nYou have been added to this cohort."
+          save_selected_cohort();
+        }
+        numChanged = modifiedUsers.changed.length;
+        if (numChanged > 0) {
+          message += "\nYou have been removed from "+modifiedUsers.changed.previous_cohort
+        }
+        numPresent = modifiedUsers.present.length;
+        if (numPresent > 0){
+          message += "\nYou are already in this cohort"
+        }
+        numErrors = modifiedUsers.unknown.length + modifiedUsers.invalid.length;
+        if (numErrors >0){
+          error = "You could not be added to this cohort"
+        }
+        $('#notification_messages').append(message);
+        $('#error_messages').append(error);
     } 
   }    
 }
