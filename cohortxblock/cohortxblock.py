@@ -107,13 +107,15 @@ class CohortXBlock(XBlock):
         self.general_title = data.get('general_title')
         self.instructions = data.get('instructions')
         self.cohort_display = data.get('cohort_display')
-
-
         return {'result': 'success'}
 
     @XBlock.json_handler                                
-    def selected_value(self, data, suffix=''):
-        self.selected_cohort = data.get('selection')
-        verified_cohort = get_cohort_by_name(self.course_id, self.selected_cohort)
+    def get_cohort_id(self, data, suffix=''):
+        verified_cohort = get_cohort_by_name(self.course_id, data.get('selection'))
         self.selected_cohort_id = str(verified_cohort.id)
+        return
+
+    @XBlock.json_handler                                
+    def save_selected_cohort(self, data, suffix=''):
+        self.selected_cohort = data.get('selection')
         return
