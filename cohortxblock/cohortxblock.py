@@ -7,7 +7,7 @@ from xblock.fields import Scope, Integer, String, List
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from courseware import courses
-import openedx.core.djangoapps.course_groups.cohorts
+from openedx.core.djangoapps.course_groups.cohorts import is_course_cohorted, get_course_cohorts, get_cohort_by_name, get_cohort_by_id, add_user_to_cohort
 from django.contrib.auth.models import User
 from opaque_keys.edx.locations import SlashSeparatedCourseKey
 
@@ -77,9 +77,9 @@ class CohortXBlock(XBlock):
         Create a fragment used to display the edit view in the Studio.
         """
 
-        if cohorts.is_course_cohorted(self.course_id):
+        if is_course_cohorted(self.course_id):
             course = courses.get_course(self.course_id)
-            self.cohort_list = cohorts.get_course_cohorts(course)
+            self.cohort_list = get_course_cohorts(course)
 
 
         context.update({
@@ -102,9 +102,9 @@ class CohortXBlock(XBlock):
         self.cohort_display = data.get('cohort_display')
         return {'result': 'success'}
 
-    @XBlock.json_handler                                
+    @XBlock.json_handler             
     def get_cohort_id(self, data, suffix=''):
-        verified_cohort = cohorts.get_cohort_by_name(self.course_id, data.get('selection'))
+        verified_cohort = get_cohort_by_name(self.course_id, data.get('selection'))
         user_email = User.objects.get(id=self.scope_ids.user_id)
         resp = add_users_to_cohort(user_email,self.course_id,verified_cohort.id)
         return resp
@@ -136,7 +136,7 @@ class CohortXBlock(XBlock):
         course_key = SlashSeparatedCourseKey.from_deprecated_string(course_key_string)
 
         try:
-            cohort = cohorts.get_cohort_by_id(course_key, cohort_id)
+            cohort = get_cohort_by_id(course_key, cohort_id)
         except CourseUserGroup.DoesNotExist:
             raise Http404("Cohort (ID {cohort_id}) not found for {course_key_string}".format(
                 cohort_id=cohort_id,
@@ -153,7 +153,7 @@ class CohortXBlock(XBlock):
                 continue
 
             try:
-                (user, previous_cohort) = cohorts.add_user_to_cohort(cohort, username_or_email)
+                (user, previous_cohort) = add_user_to_cohort(cohort, username_or_email)
                 info = {
                     'username': user.username,
                     'name': user.profile.name,
