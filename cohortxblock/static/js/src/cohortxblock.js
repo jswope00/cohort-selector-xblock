@@ -16,10 +16,10 @@ function CohortXBlock(runtime, element) {
           type: "POST",
           url: get_cohort_id_url,        
           data: JSON.stringify({selection:selected_cohort}), 
-          success: function (data) {
-            console.log("Success : ");
-            console.log(data);
-            generate_message(data);
+	  success: function (data) {
+          console.log("Success : ");
+          console.log(data);
+	  add_user_to_cohort(data);
           },
           error: function (error) {
             console.log("Error");
@@ -27,7 +27,24 @@ function CohortXBlock(runtime, element) {
           }
         });       
     }
- 
+
+    function add_user_to_cohort(cohort_id){
+        var add_user_to_cohort_url = "http://54.84.102.234/courses/{{self.course_id}}/cohorts/"+cohort_id+"/add"
+        $.ajax({
+        type: "POST",
+        url: add_user_to_cohort_url,        
+        data: {users:"{{user}}"}, 
+        success: function (data) {
+          console.log("Success : ");
+          console.log(data);
+          generate_message(data);
+        },
+        error: function (error) {
+          console.log("Error");
+          console.log(error);
+        }  
+    });  
+
     function save_selected_cohort(){
         var save_selected_cohort_url = runtime.handlerUrl(element, 'save_selected_cohort');
         selected_cohort = $("#student_cohort_list").val();

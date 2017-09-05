@@ -7,9 +7,8 @@ from xblock.fields import Scope, Integer, String, List
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from courseware import courses
-import openedx.core.djangoapps.course_groups.cohorts
+from openedx.core.djangoapps.course_groups.cohorts import get_course_cohorts, is_course_cohorted, get_cohort_by_name
 from django.contrib.auth.models import User
-from opaque_keys.edx.locations import SlashSeparatedCourseKey
 
 loader = ResourceLoader(__name__)
 
@@ -49,6 +48,11 @@ class CohortXBlock(XBlock):
         scope=Scope.user_info,
         help="Specific user selection for cohort"
     )
+    selected_cohort_id=String(
+        default=None,
+        scope=Scope.user_info,
+        help="Selected cohort id"
+    )
 
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
@@ -62,8 +66,11 @@ class CohortXBlock(XBlock):
         when viewing courses.
         """
 
+        user = User.objects.get(id=self.scope_ids.user_id)
+
         context.update({
-            "self": self
+            "self": self,
+	    "user":user
         })
         fragment = Fragment()
         fragment.add_content(loader.render_template("static/html/cohortxblock.html",context))
@@ -77,9 +84,9 @@ class CohortXBlock(XBlock):
         Create a fragment used to display the edit view in the Studio.
         """
 
-        if cohorts.is_course_cohorted(self.course_id):
+        if is_course_cohorted(self.course_id):
             course = courses.get_course(self.course_id)
-            self.cohort_list = cohorts.get_course_cohorts(course)
+            self.cohort_list = get_course_cohorts(course)
 
 
         context.update({
@@ -104,73 +111,11 @@ class CohortXBlock(XBlock):
 
     @XBlock.json_handler                                
     def get_cohort_id(self, data, suffix=''):
-        verified_cohort = cohorts.get_cohort_by_name(self.course_id, data.get('selection'))
-        user_email = User.objects.get(id=self.scope_ids.user_id)
-        resp = add_users_to_cohort(user_email,self.course_id,verified_cohort.id)
-        return resp
+        verified_cohort = get_cohort_by_name(self.course_id, data.get('selection'))
+        self.selected_cohort_id = str(verified_cohort.id)
+        return verified_cohort.id
 
     @XBlock.json_handler                                
     def save_selected_cohort(self, data, suffix=''):
         self.selected_cohort = data.get('selection')
         return
-
-
-    def add_users_to_cohort(user_email, course_key_string, cohort_id):
-        """
-        Return json dict of:
-
-        {'success': True,
-         'added': [{'username': ...,
-                    'name': ...,
-                    'email': ...}, ...],
-         'changed': [{'username': ...,
-                      'name': ...,
-                      'email': ...,
-                      'previous_cohort': ...}, ...],
-         'present': [str1, str2, ...],    # already there
-         'unknown': [str1, str2, ...]}
-
-         Raises Http404 if the cohort cannot be found for the given course.
-        """
-        # this is a string when we get it here
-        course_key = SlashSeparatedCourseKey.from_deprecated_string(course_key_string)
-
-        try:
-            cohort = cohorts.get_cohort_by_id(course_key, cohort_id)
-        except CourseUserGroup.DoesNotExist:
-            raise Http404("Cohort (ID {cohort_id}) not found for {course_key_string}".format(
-                cohort_id=cohort_id,
-                course_key_string=course_key_string
-            ))
-
-        users = user_email
-        added = []
-        changed = []
-        present = []
-        unknown = []
-        for username_or_email in split_by_comma_and_whitespace(users):
-            if not username_or_email:
-                continue
-
-            try:
-                (user, previous_cohort) = cohorts.add_user_to_cohort(cohort, username_or_email)
-                info = {
-                    'username': user.username,
-                    'name': user.profile.name,
-                    'email': user.email,
-                }
-                if previous_cohort:
-                    info['previous_cohort'] = previous_cohort
-                    changed.append(info)
-                else:
-                    added.append(info)
-            except ValueError:
-                present.append(username_or_email)
-            except User.DoesNotExist:
-                unknown.append(username_or_email)
-
-        return json_http_response({'success': True,
-                                   'added': added,
-                                   'changed': changed,
-                                   'present': present,
-                                   'unknown': unknown})
