@@ -71,4 +71,5 @@ function CohortXBlock(runtime, element) {
         $('#notification_messages').append(message);
         $('#error_messages').append(error);
     } 
-  }
+  }    
+}
