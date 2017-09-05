@@ -115,7 +115,7 @@ class CohortXBlock(XBlock):
         return
 
 
-    def add_users_to_cohort(self, user_email, course_key_string, cohort_id):
+    def add_users_to_cohort(user_email, course_key_string, cohort_id):
         """
         Return json dict of:
 
@@ -133,10 +133,10 @@ class CohortXBlock(XBlock):
          Raises Http404 if the cohort cannot be found for the given course.
         """
         # this is a string when we get it here
-        # course_key = SlashSeparatedCourseKey.from_deprecated_string(course_key_string)
+        course_key = SlashSeparatedCourseKey.from_deprecated_string(course_key_string)
 
         try:
-            cohort = get_cohort_by_id(course_key_string, cohort_id)
+            cohort = get_cohort_by_id(course_key, cohort_id)
         except CourseUserGroup.DoesNotExist:
             raise Http404("Cohort (ID {cohort_id}) not found for {course_key_string}".format(
                 cohort_id=cohort_id,
