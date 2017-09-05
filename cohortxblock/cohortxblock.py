@@ -106,7 +106,7 @@ class CohortXBlock(XBlock):
     def get_cohort_id(self, data, suffix=''):
         verified_cohort = get_cohort_by_name(self.course_id, data.get('selection'))
         user_email = User.objects.get(id=self.scope_ids.user_id)
-        resp = self.add_users_to_cohort(user_email,self.course_id,verified_cohort.id)
+        resp = add_users_to_cohort(user_email,self.course_id,verified_cohort.id)
         return resp
 
     @XBlock.json_handler                                
