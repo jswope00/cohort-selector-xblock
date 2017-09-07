@@ -1,7 +1,7 @@
 <div class="cohortxblock_block">
 	<h1>{{self.general_title}}</h1>
 	<h3>{{self.instructions}}</h3>
-	<select name="student_cohort_list" id="student_cohort_list">
+	<select name="student_cohort_list" id="student_cohort_list" style="min-width:150px; margin-top:30px;">
 		{% for cohort in self.cohort_display %}
 			{% if cohort == self.selected_cohort %}
 				<option value="{{cohort}}" selected>{{cohort}}</option>
@@ -12,7 +12,7 @@
 	</select>
 	<div id="notification_messages" style="color: green"></div>
 	<div id="error_messages" style="color: red"></div>
-	<div style="padding: 50px;padding-bottom: 0px;float: right;">
+	<div style="padding-top: 30px;padding-bottom: 0px;float: right;">
         <button id ="btn" type="button" class="cohortxblock_block">Submit</button>    
     </div>	
 </div>                                                                          
