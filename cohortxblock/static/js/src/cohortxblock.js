@@ -3,10 +3,10 @@ function CohortXBlock(runtime, element) {
 
     var handle_Url= runtime.handlerUrl(element, 'selected_value');
 
-    $('#btn', element).click(function(eventObject) {
-        get_cohort_id();                                                       
-	$('#notification_messages').empty();
-	$('#error_messages').empty();
+    $('#student_cohort_list').change(function() {
+        get_cohort_id();
+        $('#notification_messages').empty();
+        $('#error_messages').empty();
       });
 
     function get_cohort_id(){
