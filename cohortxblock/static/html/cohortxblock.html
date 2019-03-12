@@ -6,6 +6,7 @@
 			{% if cohort == self.selected_cohort %}
 				<option value="{{cohort}}" selected>{{cohort}}</option>
 			{% else %}
+				<option style="display:none"> </option>
 				<option value="{{cohort}}">{{cohort}}</option>
 			{% endif %}
 		{% endfor %}
