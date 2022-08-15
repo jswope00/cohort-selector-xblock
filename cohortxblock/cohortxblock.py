@@ -6,7 +6,7 @@ from xblock.core import XBlock
 from xblock.fields import Scope, Integer, String, List
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
-from courseware import courses
+from lms.djangoapps.courseware import courses
 from openedx.core.djangoapps.course_groups.cohorts import get_course_cohorts, is_course_cohorted, get_cohort_by_name
 from django.contrib.auth.models import User
 
