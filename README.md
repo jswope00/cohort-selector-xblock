@@ -4,31 +4,29 @@ An embeddable xblock that will simply allow a user to self-select their cohort i
 Installation
 ------------
 
-Make sure that `ALLOW_ALL_ADVANCED_COMPONENTS` feature flag is set to `True` in `cms.env.json`.
-
-Change user and activate env:
-
+Access the LMS/CMS docker container:
 ```bash
-sudo -H -u edxapp bash
-source /edx/app/edxapp/edxapp_env
+docker exec -it tutor_local_lms_1 /bin/bash    # For LMS
+docker exec -it tutor_local_cms_1 /bin/bash    # For CMS
 ```
 
-Get the source to the /edx/app/edxapp/ folder:
-
+Clone the Cohort Selector repository here:
 ```bash
-cd /edx/app/edxapp/
 git clone https://github.com/jswope00/cohort-selector-xblock.git
 ```
 
-For Installation:
+Access the Cohort Selector directory:
 ```bash
-pip install cohort-selector-xblock/
+cd cohort-selector-xblock/
+```
+
+Install this using the following command:
+```bash
+pip install -e .
 ```
 
 To upgrade an existing installation of this XBlock, fetch the latest code and then update:
-
 ```bash
-cd cohort-selector-xblock/
 git pull origin master
 cd ..
 pip install -U --no-deps cohort-selector-xblock/
@@ -37,9 +35,9 @@ pip install -U --no-deps cohort-selector-xblock/
 Configuration
 -------------
 
-Go to ```edx-platform/openedx/core/djangoapps/course_groups/views.py:```
+Access the ```edx-platform/openedx/core/djangoapps/course_groups/views.py``` file.
 
-Find the function ```def add_users_to_cohort(request, course_key_string, cohort_id):```
+Find the function ```def add_users_to_cohort(request, course_key_string, cohort_id)```:
 
 Under the function, perform the following change:
 
@@ -52,12 +50,12 @@ Replace 'staff' with 'load'
 get_course_with_access(request.user, 'load', course_key)
 ```
 
-Restart Edxapp:
-
+Restart the Server:
 ```bash
-exit
-sudo /edx/bin/supervisorctl restart edxapp:
+tutor local restart
 ```
+
+Note: Installation and Configuration steps are to be done for LMS and CMS both.
 
 Enabling in Studio
 ------------------
