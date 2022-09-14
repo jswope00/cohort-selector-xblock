@@ -29,7 +29,7 @@ function CohortXBlock(runtime, element) {
     }
 
     function add_user_to_cohort(cohort_id){
-        var add_user_to_cohort_url = "http://"+window.location.hostname+"/courses/{{self.course_id}}/cohorts/"+cohort_id+"/add"
+        var add_user_to_cohort_url = window.location.protocol + "//" + window.location.hostname + "/courses/{{self.course_id}}/cohorts/" + cohort_id + "/add";
         $.ajax({
         type: "POST",
         url: add_user_to_cohort_url,        
